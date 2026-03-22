@@ -134,8 +134,8 @@ set registry-url=https://registry-1.docker.io tmpdir=tmpfs1/tmp
 #### 2.1. Создание veth интерфейса
 
 ```routeros
-/interface veth add address=172.18.20.6/30 gateway=172.18.20.5 name=veth-xray
-/ip address add interface=veth-xray address=172.18.20.5/30
+/interface veth add address=172.18.20.6/30 gateway=172.18.20.5 name=docker-xray-vless-veth
+/ip address add interface=docker-xray-vless-veth address=172.18.20.5/30
 ```
 
 #### 2.2. Переменные окружения
@@ -157,14 +157,14 @@ add list=xray key=FP value=firefox
 **С хранением на USB/SD (персистентный):**
 ```routeros
 /container add remote-image=manianuk/miktotik-vless-xhttp:latest \
-    interface=veth-xray envlist=xray root-dir=disk1/xray \
+    interface=docker-xray-vless-veth envlist=xray root-dir=disk1/xray \
     start-on-boot=yes logging=yes
 ```
 
 **С хранением в RAM (рекомендуется для 512MB+ RAM):**
 ```routeros
 /container add remote-image=manianuk/miktotik-vless-xhttp:latest:latest \
-    interface=veth-xray envlist=xray root-dir=tmpfs1/xray \
+    interface=docker-xray-vless-veth envlist=xray root-dir=tmpfs1/xray \
     start-on-boot=yes logging=yes
 ```
 
@@ -173,7 +173,7 @@ add list=xray key=FP value=firefox
 #### 2.4. NAT для трафика через контейнер
 
 ```routeros
-/ip firewall nat add action=masquerade chain=srcnat out-interface=veth-xray comment="xray-masq"
+/ip firewall nat add action=masquerade chain=srcnat out-interface=docker-xray-vless-veth comment="xray-masq"
 ```
 
 #### 2.5. Запуск контейнера
@@ -219,7 +219,7 @@ add list=xray key=FP value=firefox
 
 # Скачать новый образ и создать контейнер
 /container add remote-image=manianuk/miktotik-vless-xhttp:latest:latest \
-    interface=veth-xray envlist=xray root-dir=disk1/xray \
+    interface=docker-xray-vless-veth envlist=xray root-dir=disk1/xray \
     start-on-boot=yes logging=yes
 
 # Дождаться скачивания и запустить
@@ -434,7 +434,7 @@ ps aux
 ### Трафик через контейнер
 
 ```routeros
-/tool torch interface=veth-xray
+/tool torch interface=docker-xray-vless-veth
 ```
 
 ---
@@ -457,7 +457,7 @@ ps aux
 │  │   Клиенты   │────▶│         Routing Table            │  │
 │  └─────────────┘     │                                  │  │
 │                      │  RU (BGP) ──▶ ether1/ether2      │  │
-│                      │  Other ────▶ veth-xray           │  │
+│                      │  Other ────▶ docker-xray-vless-veth           │  │
 │                      └──────────────────────────────────┘  │
 │                                    │                        │
 │                                    ▼                        │
