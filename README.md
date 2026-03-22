@@ -81,7 +81,7 @@ add type=tmpfs tmpfs-max-size=64M slot=tmpfs1
 ```routeros
 # Настройка реестра с tmpfs для временных файлов
 /container/config
-set registry-url=https://ghcr.io tmpdir=tmpfs1/tmp
+set registry-url=https://registry-1.docker.io tmpdir=tmpfs1/tmp
 
 # Для хранения контейнера можно использовать:
 # - disk1 (USB/SD) - если нужна персистентность после перезагрузки
@@ -156,14 +156,14 @@ add list=xray key=FP value=firefox
 
 **С хранением на USB/SD (персистентный):**
 ```routeros
-/container add remote-image=ghcr.io/mkostelcev/xray-mikrotik-xhttp:latest \
+/container add remote-image=manianuk/miktotik-vless-xhttp:latest \
     interface=veth-xray envlist=xray root-dir=disk1/xray \
     start-on-boot=yes logging=yes
 ```
 
 **С хранением в RAM (рекомендуется для 512MB+ RAM):**
 ```routeros
-/container add remote-image=ghcr.io/mkostelcev/xray-mikrotik-xhttp:latest \
+/container add remote-image=manianuk/miktotik-vless-xhttp:latest:latest \
     interface=veth-xray envlist=xray root-dir=tmpfs1/xray \
     start-on-boot=yes logging=yes
 ```
@@ -218,7 +218,7 @@ add list=xray key=FP value=firefox
 /container remove [find tag~"xray"]
 
 # Скачать новый образ и создать контейнер
-/container add remote-image=ghcr.io/mkostelcev/xray-mikrotik-xhttp:latest \
+/container add remote-image=manianuk/miktotik-vless-xhttp:latest:latest \
     interface=veth-xray envlist=xray root-dir=disk1/xray \
     start-on-boot=yes logging=yes
 
